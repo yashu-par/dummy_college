@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Linkup - Messages</title>
+  <style>
+    body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f6fa;
+}
+
+.top-navbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .top-navbar .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .top-navbar .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-icons i {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      margin-left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+
+.container {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+.users-panel {
+  width: 250px;
+  background-color: #f1f2f4;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+}
+
+.user {
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.user-img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.chat-panel {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  max-width: 60%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+
+.sent {
+  background-color: #d4f9d4;
+  align-self: flex-end;
+}
+
+.received {
+  background-color: #cce0ff;
+  align-self: flex-start;
+}
+
+.input-box {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #2a5bd7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #244db8;
+}
+
+.error-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Top Navbar -->
+  <div class="top-navbar">
+    <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">&nbsp;LinkUp</div>
+    <div class="nav-icons">
+      <a href="index.html"><div>🏠 Home</div></a>
+      <a href="profile.html"><div>👥 <sup>2</sup></div></a>
+      <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
+      <a href="myprofile.html"><div> ✏️</div></a>
+      <a href="post.html"><button class="logout-btn">🎬</button></a>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Users List -->
+    <div class="users-panel">
+      <h3>Users</h3>
+
+      <div class="user">
+        <img src="blank-profile-picture-973460_640.png" alt="dp" class="user-img" />
+        <div>
+          <strong>Rishika Kushwah</strong>
+          <p>rishikakushwah</p>
+        </div>
+      </div>
+
+      <div class="user">
+        <img src="blank-profile-picture-973460_640.png" alt="dp" class="user-img" />
+        <div>
+          <strong>Roshan Yadav</strong>
+          <p>roshaniyadav</p>
+        </div>
+      </div>
+
+      <div class="user">
+        <img src="blank-profile-picture-973460_640.png" alt="dp" class="user-img" />
+        <div>
+          <strong>Ayush Sharma</strong>
+          <p>ayushsharma</p>
+        </div>
+      </div>
+
+      <div class="user">
+        <img src="blank-profile-picture-973460_640.png" alt="dp" class="user-img" />
+        <div>
+          <strong>Neha Verma</strong>
+          <p>nehaverma</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-panel">
+      <h3>Messages</h3>
+      <div class="messages" id="messages">
+        <!-- Messages will appear here -->
+      </div>
+      <div class="input-box">
+        <input type="text" id="messageInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+      <p id="error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <script> 
+  
+  let receiverId = null;
+
+  // Select a user from the left list
+  document.querySelectorAll(".user").forEach((userDiv, index) => {
+    userDiv.addEventListener("click", () => {
+      const usernames = ["rishikakushwah", "roshaniyadav", "ayushsharma", "nehaverma"];
+      const userIds = [2, 3, 4, 5]; // Use real user IDs from your Django User table
+      receiverId = userIds[index];
+
+      document.getElementById("messages").innerHTML = "";
+      loadMessages();
+    });
+  });
+
+  async function loadMessages() {
+    if (!receiverId) return;
+    const response = await fetch(`/get-messages/${receiverId}/`);
+    const data = await response.json();
+    const messages = document.getElementById("messages");
+    messages.innerHTML = "";
+
+    data.messages.forEach(msg => {
+      const div = document.createElement("div");
+      div.className = "message " + (msg.sender === "{{ request.user.username }}" ? "sent" : "received");
+      div.textContent = msg.content;
+      messages.appendChild(div);
+    });
+
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const messages = document.getElementById("messages");
+    const error = document.getElementById("error");
+    const text = input.value.trim();
+
+    error.textContent = "";
+
+    if (!text || !receiverId) {
+      error.textContent = "Select a user and type a message.";
+      return;
+    }
+
+    try {
+      const response = await fetch("/send-message/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          receiver_id: receiverId,
+          content: text,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "message sent";
+        msgDiv.textContent = result.data.content;
+        messages.appendChild(msgDiv);
+        input.value = "";
+        messages.scrollTop = messages.scrollHeight;
+      } else {
+        error.textContent = "Failed to send message.";
+      }
+    } catch (err) {
+      error.textContent = "Error: " + err.message;
+    }
+  }
+
+  // CSRF Helper
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+
+
+  </script>
+</body>
+</html>

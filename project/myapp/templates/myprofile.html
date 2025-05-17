@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #eef3f8;
+    }
+
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .top-navbar .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .top-navbar .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-icons i {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      margin-left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .main-layout {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+      padding: 30px;
+      max-width: 1300px;
+      margin: auto;
+    }
+
+    .profile-container {
+      width: 850px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .banner-img {
+      width: 100%;
+      height: 160px;
+      background-image: url('https://thumbs.dreamstime.com/b/professional-background-image-business-people-present-332341417.jpg');
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      padding: 10px 25px;
+      position: relative;
+      top: -40px;
+    }
+
+    .profile-img {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      object-fit: cover;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .profile-name-title {
+      margin-left: 20px;
+    }
+
+    .profile-name-title h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .profile-name-title p {
+      margin: 5px 0 0;
+      color: #666;
+      font-size: 15px;
+    }
+
+    .profile-details {
+      padding: 10px 25px 20px;
+      border-bottom: 1px solid #ddd;
+      margin-top: -25px;
+    }
+
+    .profile-details h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .profile-details p {
+      margin: 5px 0;
+      font-size: 15px;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .profile-details a {
+      color: #0a66c2;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .buttons {
+      margin-top: 15px;
+    }
+
+    .edit-profile {
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #f1f1f1;
+      color: #333;
+      transition: 0.3s;
+    }
+
+    .edit-profile:hover {
+      background-color: #d8d8d8;
+    }
+
+    .sections-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      padding: 30px 25px;
+    }
+
+    .section-wrapper {
+      background: #ffffff;
+      border-left: 6px solid #0a66c2;
+      border-radius: 10px;
+      padding: 20px 25px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease;
+    }
+
+    .section-wrapper:hover {
+      transform: translateY(-2px);
+    }
+
+    .section-wrapper h4 {
+      font-size: 18px;
+      color: #0a66c2;
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 25px;
+    }
+
+    .section-wrapper h4::before {
+      content: '📌';
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .section-wrapper p,
+    .section-wrapper ul {
+      font-size: 15px;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    .section-wrapper ul {
+      list-style-type: square;
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .section-wrapper ul li {
+      margin-bottom: 6px;
+    }
+
+    .section-wrapper:nth-child(odd) {
+      background-color: #f8fafd;
+    }
+
+    .section-wrapper:nth-child(even) {
+      background-color: #f2f7fb;
+    }
+
+    .right-section {
+      width: 300px;
+      position: sticky;
+      top: 80px;
+      height: fit-content;
+    }
+
+    .suggestion-box {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .suggestion-box h4 {
+      margin-bottom: 15px;
+      color: #0a66c2;
+    }
+
+    .suggestion-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .suggestion-box li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    .suggestion-box li img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .suggestion-box li button {
+      padding: 5px 10px;
+      background-color: #0a66c2;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .suggestion-box li button:hover {
+      background-color: #004a99;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-navbar">
+    <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">&nbsp;LinkUp</div>
+    <div class="nav-icons">
+      <a href="index.html"><div>🏠 Home</div></a>
+      <a href="profile.html"><div>👥 <sup>2</sup></div></a>
+      <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
+      <a href="message.html"><div> 💬</div></a>
+      <a href="post.html"><button class="logout-btn">🎬</button></a>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- CENTER PROFILE CONTENT -->
+    <div class="profile-container">
+      <div class="banner-img"></div>
+
+      <div class="profile-header">
+        <img id="profile-img" src="https://t4.ftcdn.net/jpg/08/35/71/47/360_F_835714791_ko7uXv4dEEqkr9WBdxICNeG8TCkKpuBf.jpg" alt="Profile" class="profile-img">
+      
+        <div class="profile-name-title">
+          <h2 id="profile-name">Loading...</h2>
+          <p id="profile-role">Loading...</p>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <h3 id="profile-username">Loading...</h3>
+        <p id="profile-bio">Loading...</p>
+        <p class="location">New Delhi, Delhi, India • <a href="contact.html">Contact info</a></p>
+        <p><a href="#">Join Developer Community</a></p>
+        <p>92,430 followers • 500+ connections</p>
+        
+        <div class="buttons">
+          <button onclick="window.location.href='editprofile.html'" class="edit-profile"> Edit Profile</button>
+        </div>
+        <div class="buttons">
+          <button onclick="window.location.href='createpost.html'" class="edit-profile"> Create Post</button>
+        </div>
+      </div> 
+
+      <div class="sections-container">
+        <div class="section-wrapper">
+          <h4>About</h4>
+          <p id="profile-about">Loading...</p>
+        </div>
+
+        <div class="section-wrapper">
+          <h4>Bio</h4>
+          <p id="profile-bio-section">Loading...</p>
+        </div>
+
+        <div class="section-wrapper">
+          <h4>Skills</h4>
+          <p id="profile-skills">Loading...</p>
+        </div>
+
+        <div class="section-wrapper">
+          <h4>Education</h4>
+          <p id="profile-education">Loading...</p>
+        </div>
+
+        <div class="section-wrapper">
+          <h4>Experience</h4>
+          <p id="profile-experience">Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right-section">
+      <div class="suggestion-box">
+        <h4>People You May Know</h4>
+        <ul>
+          <li>
+            <img src="blank-profile-picture-973460_640.png" alt="user" />
+            <div>
+              <p><strong>Neha K.</strong></p>
+              <button>Connect</button>
+            </div>
+          </li>
+          <li>
+            <img src="blank-profile-picture-973460_640.png" alt="user" />
+            <div>
+              <p><strong>Arjun S.</strong></p>
+              <button>Connect</button>
+            </div>
+          </li>
+          <li>
+            <img src="blank-profile-picture-973460_640.png" alt="user" />
+            <div>
+              <p><strong>Arjun S.</strong></p>
+              <button>Connect</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="suggestion-box">
+        <h4>Trending Topics</h4>
+        
+        <ul>
+          <li>#100DaysOfCode</li>
+          <li>#DevOps</li>
+          <li>#ReactJS</li>
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Function to get CSRF token
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Function to load profile data
+    function loadProfileData() {
+      fetch('/api/getProfile/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'include'
+      })
+        .then(res => {
+          if (res.redirected) {
+            window.location.href = res.url;
+            return;
+          }
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log('Profile data received:', data);
+          if (data && data.profile) {
+            const profile = data.profile;
+            console.log('Profile object:', profile);
+            
+            // Update profile image
+            if (profile.profile_image) {
+              document.getElementById('profile-img').src = profile.profile_image;
+            }
+            
+            // Update profile name and role
+            document.getElementById('profile-name').textContent = profile.username;
+            document.getElementById('profile-role').textContent = profile.role || 'User';
+            document.getElementById('profile-username').textContent = profile.username;
+            
+            // Update bio and about
+            document.getElementById('profile-bio').textContent = profile.bio || 'No bio available';
+            document.getElementById('profile-bio-section').textContent = profile.bio || 'No bio available';
+            document.getElementById('profile-about').textContent = profile.about || 'No about information available';
+            
+            // Update skills
+            document.getElementById('profile-skills').textContent = profile.skills || 'No skills listed';
+            
+            // Update education
+            document.getElementById('profile-education').textContent = profile.education || 'No education listed';
+            
+            // Update experience
+            document.getElementById('profile-experience').textContent = profile.experience || 'No experience listed';
+
+            document.getElementById('about').value = profile.about || '';
+            document.getElementById('role').value = profile.role || '';
+          } else {
+            console.error('No profile data in response:', data);
+          }
+        })
+        .catch(err => {
+          console.error('Error loading profile:', err);
+          // Show error message to user
+          document.getElementById('profile-name').textContent = 'Error loading profile';
+          document.getElementById('profile-role').textContent = 'Please try again';
+        });
+    }
+
+    // Function to handle logout
+    function logout() {
+      // Add your logout logic here
+      window.location.href = '/login.html';
+    }
+
+    // Load profile data when page loads
+    document.addEventListener('DOMContentLoaded', loadProfileData);
+
+    const formData = {
+      username: document.getElementById('username').value,
+      about: document.getElementById('about').value,
+      bio: document.getElementById('bio').value,
+      role: document.getElementById('role').value,
+      skills: document.getElementById('skills').value,
+      education: document.getElementById('education').value,
+      experience: document.getElementById('experience').value,
+      profile_image: profileImage,
+      'about': profile.about,
+      'role': user_reg.role,
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LinkUp - My Network</title>
+  <style>
+     body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+    /* Navbar */
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .top-navbar .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .top-navbar .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-icons i {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      margin-left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      gap: 1rem;
+      padding: 1rem 2rem;
+    }
+
+    /* Left Sidebar */
+    .left-sidebar {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      height: 500px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .left-sidebar img.cover {
+      width: 100%;
+      border-radius: 8px;
+      height: 80px;
+      object-fit: cover;
+    }
+
+    .left-sidebar img.avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-top: -30px;
+      border: 3px solid white;
+    }
+
+    .left-sidebar h3 {
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .left-sidebar p {
+      font-size: 0.9rem;
+      color: #0073b1;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu {
+      margin-top: 1rem;
+    }
+
+    .menu div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .feed-container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .post-card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .user-info img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    .user-info .details {
+      line-height: 1.2;
+    }
+
+    .user-info .details .name {
+      font-weight: bold;
+    }
+
+    .user-info .details .time {
+      color: #888;
+      font-size: 0.85em;
+    }
+
+    .post-content p {
+      font-size: 1rem;
+      margin: 10px 0;
+    }
+
+    .post-content img,
+    .post-content video {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .actions button:hover {
+      text-decoration: underline;
+    }
+    /* Right Sidebar */
+    .right-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .search-box, .suggestions {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+
+    .user-suggestion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .user-info {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .user-info img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+    }
+
+    .user-actions button {
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    .connect {
+      border: 1px solid #6c2bd9;
+      color: #6c2bd9;
+      border-radius: 6px;
+      padding: 0.2rem 0.7rem;
+    }
+
+    .accept {
+      color: green;
+    }
+
+    .reject {
+      color: red;
+    }
+
+  </style>
+</head>
+<body>
+    
+  <!-- Navbar -->
+  <div class="top-navbar">
+    <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">&nbsp;LinkUp</div>
+    <div class="nav-icons">
+    <a href="index.html"><div>🏠 Home</div></a>
+    <a href="profile.html"><div>👥 <sup>2</sup></div></a>
+    <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
+    <a href="post.html"><div>👤 Me</div></a>
+    <a href="login.html"><button class="logout-btn">↩ Logout</button></a>
+  </div>
+</div>
+
+
+  <!-- Main Layout -->
+  <div class="container">
+    <!-- Left Sidebar -->
+    <div class="left-sidebar">
+      <img src="https://i.pinimg.com/736x/cb/c2/08/cbc208059429ef521fb5d0f26d0b5473.jpg" class="cover" />
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvW3EiCFHxyDAMLeBoIrXn_gufSNsDT-BE_A&s" class="avatar" />
+      <h3>Yashasvee</h3>
+      <p>LinkUp User<br>10+ connections</p>
+      <div class="menu">
+        <div>🏠 Home</div>
+        <div>👥 My Network</div>
+        <div>🔔 Notifications</div>
+        
+      </div>
+    </div>
+
+
+  <div class="feed-container">
+    <div id="postDisplay"></div>
+  </div>
+  
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+      <div class="search-box">
+        <h4>Search Users</h4>
+        <input type="text" placeholder="Search for users..." />
+      </div>
+
+      <div class="suggestions">
+        <h4>People You May Know</h4>
+        <div class="user-suggestion">
+          <div class="user-info">
+            <img src="blank-profile-picture-973460_640.png" />
+            <div>
+              <strong>Neha Yadav</strong><br>
+              <small>Linkedin User</small>
+            </div>
+          </div>
+          <div class="user-actions">
+            <button class="connect">Connect</button>
+          </div>
+        </div>
+
+        <div class="user-suggestion">
+          <div class="user-info">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU8yYqtt1KEX679F579ZBkvlnBcX5FpK2BWw&" />
+            <div>
+              <strong>Yuvraj Yadav</strong><br>
+              <small>LinkUp User</small>
+            </div>
+          </div>
+          <div class="user-actions">
+            <button class="accept">✔</button>
+            <button class="reject">✖</button>
+          </div>
+        </div>
+
+        <div class="user-suggestion">
+          <div class="user-info">
+            <img src="yashu (2).jpeg" />
+            <div>
+              <strong>Raju Yadav</strong><br>
+              <small>LinkUp User</small>
+            </div>
+          </div>
+          <div class="user-actions">
+            <button class="accept">✔</button>
+            <button class="reject">✖</button>
+          </div>
+        </div>
+
+        <div class="user-suggestion">
+          <div class="user-info">
+            <img src="blank-profile-picture-973460_640.png" />
+            <div>
+              <strong>Ram</strong><br>
+              <small>LinkUp User</small>
+            </div>
+          </div>
+          <div class="user-actions">
+            <button class="connect">Connect</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<!--<script>
+window.addEventListener("DOMContentLoaded", function () {
+  fetch("/api/posts/", { credentials: "include" })
+    .then(res => res.json())
+    .then(data => {
+      const postContainer = document.getElementById("postDisplay");
+      postContainer.innerHTML = "";
+      data.posts.forEach(post => {
+        postContainer.innerHTML += `
+          <div class="post-card">
+            <div class="user-info">
+              <img src="images/default-profile.png" alt="User">
+              <div class="details">
+                <div class="name">${post.user}</div>
+                <div class="time">${post.created_at}</div>
+              </div>
+            </div>
+            <div class="post-content">
+              <p>${post.title}</p>
+              ${post.image ? `<img src="${post.image}" alt="Post Image">` : ""}
+            </div>
+            <div class="actions">
+              <button>❤️ Like</button>
+              <button>💬 Comment</button>
+              <button>🔁 Share</button>
+            </div>
+          </div>
+        `;
+      });
+    });
+});
+</script>-->
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    fetch("/api/posts/", { credentials: "include" })
+      .then(res => res.json())
+      .then(data => {
+        const postContainer = document.getElementById("postDisplay");
+        postContainer.innerHTML = "";
+
+        data.posts.forEach(post => {
+          const postId = post.id;
+          const postElement = document.createElement("div");
+          postElement.className = "post-card";
+          postElement.innerHTML = `
+            <div class="user-info">
+              <img src="images/default-profile.png" alt="User">
+              <div class="details">
+                <div class="name">${post.user}</div>
+                <div class="time">${post.created_at}</div>
+              </div>
+            </div>
+            <div class="post-content">
+              <p>${post.title}</p>
+              ${post.image ? `<img src="${post.image}" alt="Post Image">` : ""}
+            </div>
+            <div class="actions">
+              <button class="like-btn" data-liked="false">❤️ Like</button>
+              <button class="comment-btn">💬 Comment</button>
+              <button class="share-btn" data-post-id="${postId}">🔁 Share</button>
+            </div>
+            <div class="comment-section" style="margin-top:10px; display:none;">
+              <input type="text" class="comment-input" placeholder="Write a comment..." style="width: 90%; padding: 6px; border-radius: 6px; border: 1px solid #ccc;"/>
+              <button class="submit-comment" style="margin-left: 5px;">Post</button>
+              <div class="comment-list" style="margin-top:10px;"></div>
+            </div>
+          `;
+
+          // Like button toggle
+          const likeBtn = postElement.querySelector(".like-btn");
+          likeBtn.addEventListener("click", () => {
+            const liked = likeBtn.dataset.liked === "true";
+            likeBtn.dataset.liked = !liked;
+            likeBtn.textContent = liked ? "❤️ Like" : "💖 Liked";
+          });
+
+          // Toggle comment section
+          const commentBtn = postElement.querySelector(".comment-btn");
+          const commentSection = postElement.querySelector(".comment-section");
+          commentBtn.addEventListener("click", () => {
+            commentSection.style.display = commentSection.style.display === "none" ? "block" : "none";
+          });
+
+          // Submit comment
+          const submitBtn = postElement.querySelector(".submit-comment");
+          const input = postElement.querySelector(".comment-input");
+          const commentList = postElement.querySelector(".comment-list");
+          submitBtn.addEventListener("click", () => {
+            const commentText = input.value.trim();
+            if (commentText !== "") {
+              const commentEl = document.createElement("div");
+              commentEl.textContent = commentText;
+              commentEl.style.padding = "5px 0";
+              commentList.appendChild(commentEl);
+              input.value = "";
+
+              // Optional: POST comment to server
+              /*
+              fetch("/api/comments/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": getCSRFToken(),
+                },
+                credentials: "include",
+                body: JSON.stringify({ post_id: postId, comment: commentText })
+              });
+              */
+            }
+          });
+
+          // Share button functionality
+          const shareBtn = postElement.querySelector(".share-btn");
+          shareBtn.addEventListener("click", () => {
+            fetch("/api/share/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken(),
+              },
+              credentials: "include",
+              body: JSON.stringify({ post_id: postId })
+            })
+              .then(res => res.json())
+              .then(data => {
+                alert(data.message || "Post shared successfully!");
+              })
+              .catch(err => {
+                console.error("Share failed", err);
+                alert("Failed to share the post.");
+              });
+          });
+
+          postContainer.appendChild(postElement);
+        });
+      });
+
+    // CSRF token helper for Django
+    function getCSRFToken() {
+      const name = "csrftoken=";
+      const decodedCookies = decodeURIComponent(document.cookie).split(';');
+      for (let cookie of decodedCookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name)) {
+          return cookie.substring(name.length);
+        }
+      }
+      return "";
+    }
+  });
+</script>
+
+  
+
+</body>
+</html>

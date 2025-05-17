@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkUp</title>
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== HEADER STYLES ===== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #004c70;
+            padding: 15px 20px;
+            color: black;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Navigation Menu */
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: rgb(238, 232, 232);
+            text-decoration: none;
+            text-decoration: solid;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 50px 20px;
+            background: white;
+            color: black;
+            position: relative;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0;
+            /* Background Image Settings */
+            background-image: url('https://img.freepik.com/free-photo/flat-lay-photo-office-desk-with-laptop-copy-space-background_1150-45598.jpg?semt=ais_hybrid&w=740');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* White Overlay for Background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.85);
+            z-index: 1;
+        }
+
+        /* Hero Text Content */
+        .hero-text {
+            flex: 1;
+            text-align: left;
+            padding-right: 30px;
+            margin-left: 300px;
+            position: relative;
+            z-index: 2;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            text-align: left;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-align: left;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        /* Search Box Styling */
+        .search-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 30px 0;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .search-box {
+            width: 350px;
+            padding: 10px;
+            border: 2px solid #007bff;
+            border-right: none;
+            border-radius: 25px 0 0 25px;
+            outline: none;
+            height: 25px;
+            margin-left: 0;
+        }
+
+        .search-button {
+            background-color: #007bff;
+            color: white;
+            border: 2px solid #007bff;
+            border-left: none;
+            padding: 10px 15px;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+        }
+
+        /* Popular Searches */
+        .populare p {
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: left;
+            margin-right: 0;
+        }
+
+        /* Hero Image */
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 300px;
+            position: relative;
+            z-index: 2;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .hero img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            margin: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .hero img:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .content {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: auto;
+            text-align: left;
+        }
+
+        .content h2 {
+            color: #004c70;
+        }
+
+        .content p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .feature {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .feature h3 {
+            color: #004c70;
+        }
+
+        /* ===== SERVICES SECTION ===== */
+        .services-section {
+            padding: 60px 20px;
+            background-color: #f4f6f9;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .services-section h2 {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+
+        .services-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .service-card {
+            background: #ffffff;
+            width: 280px;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .service-card img {
+            height: 70px;
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            font-size: 1.4rem;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            color: #6c7a89;
+            line-height: 1.5;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #002b3e;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:40px;">&nbsp;Link Up</div>
+        <nav>
+            <ul>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./index.html">About us</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+                <li><a href="./Update.html">Update</a></li>
+                <li><a href="./login.html">Login</a></li>
+                <li><a href="./signup.html">Sign up</a></li>
+                <li><a href="./Delete.html">Delete</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>
+                Welcome to Your <br>
+                professional community
+            </h1>
+            <p>Discover job opportunities and build your professional<br>
+                network. Company reviews. Salaries,Interviews,Job</p>
+
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search...">
+                <button1 class="search-button">🔍</button1>
+            </div>
+            <div class="populare">
+                <p>Populare Searches.Data Management, Marketing Manager,Customer Support</p>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://t4.ftcdn.net/jpg/13/88/44/87/360_F_1388448752_XJS225ItmvPgtYrgAOytFOWbyr7n9bhd.jpg">
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="content">
+        <h2>About Us</h2>
+        <p>We provide a platform to connect professionals, discover job opportunities, and grow your career. Whether you're looking for your dream job or networking with industry leaders, Xing Clone helps you achieve your goals.</p>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="feature">
+            <h3>Find Jobs</h3>
+            <p>Search for jobs that match your skills and interests.</p>
+        </div>
+        <div class="feature">
+            <h3>Connect</h3>
+            <p>Build a strong professional network with industry experts.</p>
+        </div>
+        <div class="feature">
+            <h3>Career Growth</h3>
+            <p>Get career advice and enhance your skills with learning resources.</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <h2>Our Services</h2>
+        <div class="services-container">
+            <div class="service-card">
+                <img src="https://media.istockphoto.com/id/2152030122/vector/business-meeting-workshop.jpg?s=612x612&w=0&k=20&c=iwDJwkmJux_wSu1exExLIFpX1OKD-QAFxcODz2zpNAk=" alt="Job Training">
+                <h3>Job-Oriented Training</h3>
+                <p>Hands-on courses designed to prepare you for real-world jobs and industry needs.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://academyflorida.com/wp-content/uploads/2019/02/resume-600x338-600x338.jpg" alt="Resume Building">
+                <h3>Resume Building</h3>
+                <p>Create professional resumes and portfolios that grab recruiters' attention.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://media.licdn.com/dms/image/v2/D5612AQFDYxf_1nLHZA/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1661970894407?e=2147483647&v=beta&t=HFd-K8mmBfKUt4UdW-fS2CjQLJ_JpssThqt-AJSb3eg" alt="Mock Interviews">
+                <h3>Mock Interviews</h3>
+                <p>Practice interviews with experts to build confidence and improve performance.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://c8.alamy.com/comp/2HXHP9T/100-placement-assistance-vector-icon-isolated-on-blue-background-2HXHP9T.jpg" alt="Placement Help">
+                <h3>Placement Assistance</h3>
+                <p>We help you connect with companies through job alerts and placement drives.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Landing. All rights reserved.</p>
+    </footer>
+</body>
+</html>

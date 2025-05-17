@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notifications</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .sidebar {
+      width: 250px;
+      min-height: 100vh;
+      background-color: white;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+    }
+    .sidebar h4 {
+      font-weight: bold;
+    }
+    .sidebar a {
+      display: block;
+      margin: 15px 0;
+      text-decoration: none;
+      color: #333;
+    }
+    .sidebar a:hover {
+      color: #0d6efd;
+    }
+    .topbar {
+      background-color: white;
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .topbar .nav-icons a {
+      margin: 0 10px;
+      color: #000;
+      text-decoration: none;
+    }
+    .topbar .nav-icons a:hover {
+      color: #0d6efd;
+    }
+
+     .notification-card{                
+      background-color: white;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #cce0ff;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .notification-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: #66b0ff;
+      cursor: pointer;
+    }
+    .notification-text {
+      display: flex;
+      align-items: center;
+    }
+    .notification-text img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    .notification-text strong {
+      color: #0d6efd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvW3EiCFHxyDAMLeBoIrXn_gufSNsDT-BE_A&s" alt="Banner" class="img-fluid rounded mb-3"/>
+      
+      <h4>Yashasvee</h4>
+      <p><a href="#">LinkUp User</a></p>
+      <p>10+ connections</p>
+      <a href="index.html">🏠 Home</a>
+      <a href="profile.html">👥 My Network</a>
+      <a href="notification.html">🔔 Notifications</a>
+      <hr>
+      <a href="#">Visit your profile</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="logo"><img src="linkup.jpg" alt="LinkUp Logo" height="40"></div>
+        <div class="nav-icons">
+          <a href="index.html">🏠Home</a>
+          <a href="profile.html">👥 </a>
+          <a href="notification.html"><strong>🔔 </strong></a>
+          <a href="post.html">🙋‍♀️ Me</a>
+          <a href="login.html">🚪 Login</a>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="container mt-4">
+        <h4>Notifications</h4>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>Infosys</strong> has shortlisted you for the role of Software Intern</span>
+          </div>
+          <small class="text-muted">1 day ago</small>
+        </div>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>Jesse Pinkmen</strong> accepted your connection request</span>
+          </div>
+          <small class="text-muted">2 days ago</small>
+        </div>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>Rishika Kushwah</strong> liked your post</span>
+          </div>
+          <div class="mt-2 ms-5 ps-1 border rounded bg-light">
+            Blue army.
+          </div>
+          <small class="text-muted">3 days ago</small>
+        </div>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>Rishika Kushwah</strong> commented on your post</span>
+          </div>
+          <div class="mt-2 ms-5 ps-1 border rounded bg-light">
+            "Great post! Totally agree."
+          </div>
+          <small class="text-muted">3 days ago</small>
+        </div>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>TCS</strong> viewed your profile</span>
+          </div>
+          <small class="text-muted">4 days ago</small>
+        </div>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>Accenture</strong> invited you for an interview</span>
+          </div>
+          <small class="text-muted">5 days ago</small>
+        </div>
+
+        <div class="notification-card">
+          <div class="notification-text">
+            <img src="blank-profile-picture-973460_640.png" alt="User">
+            <span><strong>Anjali Sharma</strong> sent you a connection request</span>
+          </div>
+          <small class="text-muted">6 days ago</small>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

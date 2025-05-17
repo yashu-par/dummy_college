@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search & Filter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background-color: #f6f6f6; }
+    header { background-color: #343a40; color: #fff; padding: 20px; font-size: 24px; text-align: center; }
+
+    .container { padding: 20px; max-width: 1200px; margin: auto; }
+    
+    /* Styling for the search and filter box */
+    .filter-box {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      width: 80%; /* narrower width compared to the background */
+      margin-left: auto;
+      margin-right: auto;
+      transition: all 0.3s ease;
+    }
+    .filter-box:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    .filter-box h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    /* Combined Input Box Style */
+    .combined-input {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #fff;
+      margin-top: 10px;
+    }
+    .input-wrapper {
+      flex: 1;
+    }
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      background-color: transparent;
+    }
+    .divider-line {
+      width: 1px;
+      height: 60%;
+      background-color: #ccc;
+    }
+    .search-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #888;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .search-icon:hover {
+      color: #4f46e5;
+      transform: translateY(-50%) scale(1.2);
+    }
+
+    /* Suggestions Section */
+    .suggestions {
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+    .company-box {
+      margin-top: 10px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .company-box:hover {
+      background-color: #f0f0f0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .company-logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 15px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #e4e4e4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .company-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .company-details {
+      flex: 1;
+    }
+    .company-details strong {
+      color: #333;
+      font-size: 16px;
+    }
+    .company-details p {
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>Search & Filter Jobs👜</header>
+  <div class="container">
+    <!-- Search and Filter Box -->
+    <div class="filter-box">
+      <h2>Search by Skills</h2>
+      <div class="combined-input">
+        <div class="input-wrapper">
+          <input type="text" id="skillsSearch" placeholder="Enter Skills (e.g., React, MongoDB, C++, Java)" />
+        </div>
+        <span class="search-icon" onclick="applyFilters()">🔍</span>
+      </div>
+    </div>
+
+    <!-- Suggested Companies -->
+    <div class="suggestions">
+      Suggested Companies:
+      <div id="companySuggestions"></div>
+    </div>
+  </div>
+
+  <script>
+    // Predefined list of companies based on skills
+    const skillCompanyMap = {
+      react: [
+        { company: "Meta", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNbpIfA-_GwTVZBVlpCvdIcLVOsCxn4BmqHA&s", location: "Menlo Park, CA", experience: "2-5 years", website: "https://www.meta.com", description: "Meta is the parent company of Facebook and the developer of React." },
+        { company: "Amazon", logo: "https://i0.wp.com/www.dafontfree.co/wp-content/uploads/2021/11/Amazon-Logo-Font-1-scaled.jpg?fit=780%2C481&ssl=1", location: "Seattle, WA", experience: "3-5 years", website: "https://www.amazon.com", description: "Amazon is a multinational technology company specializing in e-commerce, cloud computing, and more." },
+      ],
+      mongodb: [
+        { company: "MongoDB", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRglEIvnFcGxZNc7EOVmLN4OXeXHfPTYxFaiQ&s", location: "New York, NY", experience: "2-4 years", website: "https://www.mongodb.com", description: "MongoDB is an open-source document database and widely used NoSQL database." },
+        { company: "Couchbase", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXcWeG1eyDzf89gBdes7oeFzK0IHbErFi_Tg&s", location: "California", experience: "3-5 years", website: "https://www.couchbase.com", description: "Couchbase is a leading NoSQL database company." },
+      ],
+      c: [
+        { company: "TCS", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTPAWYqoR1E-YMPwd869I0X2WuToOjTrPXgQ&s", location: "Pune, India", experience: "2-5 years", website: "https://www.tcs.com", description: "TCS is a leading global IT services, consulting, and business solutions organization." },
+        { company: "Infosys", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOGcQ0lodAxH3S-Zlt_y1m2gqCYSbioHPW3Q&s", location: "Bangalore, India", experience: "2-5 years", website: "https://www.infosys.com", description: "Infosys is a multinational corporation that provides IT consulting and services." },
+      ],
+      cpp: [
+        { company: "Accenture", logo: "https://i.pinimg.com/736x/df/51/55/df5155d8a80efed181ad0b48ea7a89ee.jpg", location: "Chicago, IL", experience: "2-4 years", website: "https://www.accenture.com", description: "Accenture is a global consulting, technology services, and outsourcing company." },
+        { company: "IBM", logo: "https://blog.logomaster.ai/hs-fs/hubfs/ibm-logo-1956.jpg?width=672&height=454&name=ibm-logo-1956.jpg", location: "Armonk, NY", experience: "3-5 years", website: "https://www.ibm.com", description: "IBM is a multinational technology and consulting company specializing in hardware and software." },
+      ],
+      java: [
+        { company: "Oracle", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXYL34KnEormbEXAlmXomZhG6u88JBExCK5w&s", location: "Redwood City, CA", experience: "3-5 years", website: "https://www.oracle.com", description: "Oracle is a multinational computer technology corporation, specializing in database management systems." },
+        { company: "Google", logo: "https://storage.googleapis.com/gd-prod/images/a910d418-7123-4bc4-aa3b-ef7e25e74ae6.60c498c559810aa0.webp", location: "Mountain View, CA", experience: "2-5 years", website: "https://www.google.com", description: "Google is a multinational technology company specializing in internet services, AI, and cloud computing." },
+      ],
+      python: [
+        { company: "Microsoft", logo: "https://cdn-dynmedia-1.microsoft.com/is/image/microsoftcorp/RWCZER-Legal-IP-Trademarks-CP-MS-logo-740x417-1?wid=406&hei=230&fit=crop", location: "Redmond, WA", experience: "2-5 years", website: "https://www.microsoft.com", description: "Microsoft is a global technology company offering software, electronics, and computing services." },
+        { company: "Dropbox", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3mt1gunVadPJm0rkKBL0GudkPeYvt2OcYow&s", location: "San Francisco, CA", experience: "2-4 years", website: "https://www.dropbox.com", description: "Dropbox is a cloud storage and file synchronization service." },
+      ],
+      mysql: [
+        { company: "Amazon Web Services (AWS)", logo: "https://brandlogos.net/wp-content/uploads/2021/11/amazon_web_services-logo-300x300.png", location: "Seattle, WA", experience: "2-5 years", website: "https://aws.amazon.com", description: "AWS is a subsidiary of Amazon providing on-demand cloud computing platforms." },
+        { company: "DigitalOcean", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOFgn5qhZz4b3TusvdbrnkNJMFUfOJwIXKIA&s", location: "New York, NY", experience: "2-4 years", website: "https://www.digitalocean.com", description: "DigitalOcean provides cloud infrastructure and platform services to developers." },
+      ],
+    };
+
+    // Function to apply filters and show relevant companies based on skills entered
+    function applyFilters() {
+      const skillsSearch = document.getElementById('skillsSearch').value.toLowerCase();
+
+      const matchedCompanies = findCompanies(skillsSearch);
+
+      showCompanies(matchedCompanies);
+    }
+
+    // Find companies based on the entered skill
+    function findCompanies(skillSearch) {
+      let matchedCompanies = [];
+
+      // Match companies based on the entered skills
+      Object.entries(skillCompanyMap).forEach(([skill, companies]) => {
+        if (skillSearch.split(',').some(subSkill => subSkill.trim().toLowerCase() === skill)) {
+          matchedCompanies = [...matchedCompanies, ...companies];
+        }
+      });
+
+      return matchedCompanies;
+    }
+
+    // Show the matching companies in the suggestions section
+    function showCompanies(companies) {
+      const companyDiv = document.getElementById("companySuggestions");
+      if (companies.length > 0) {
+        companyDiv.innerHTML = companies.map(company => `
+          <div class="company-box">
+            <div class="company-logo">
+              <img src="${company.logo}" alt="${company.company} logo" />
+            </div>
+            <div class="company-details">
+              <strong><a href="${company.website}" target="_blank">${company.company}</a></strong>
+              <p>Location: ${company.location}</p>
+              <p>Experience: ${company.experience}</p>
+              <p>${company.description}</p>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        companyDiv.innerHTML = `<span>No suggestions found</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

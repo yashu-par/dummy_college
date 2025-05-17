@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e6f0f3, #f8fafd);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1000px;
+      margin: 50px auto;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-pic-section {
+      width: 35%;
+      background-color: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .profile-pic-section img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      object-fit: cover;
+      border: 4px solid #0a66c2;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-btn {
+      background-color: #0a66c2;
+      color: white;
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-align: center;
+    }
+
+    .upload-btn:hover {
+      background-color: #004182;
+    }
+
+    .profile-pic-section input[type="file"] {
+      display: none;
+    }
+
+    .edit-form-section {
+      width: 65%;
+      padding: 40px;
+    }
+
+    .edit-form-section h2 {
+      margin-top: 0;
+      color: #0a66c2;
+      font-size: 28px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    form label {
+      margin-top: 20px;
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+    }
+
+    form input, form textarea {
+      padding: 12px;
+      margin-top: 8px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: border 0.3s ease;
+      background-color: #fafafa;
+    }
+
+    form input:focus, form textarea:focus {
+      border-color: #0a66c2;
+      outline: none;
+      background-color: #fff;
+    }
+
+    form textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    form button {
+      margin-top: 30px;
+      padding: 12px;
+      background-color: #0a66c2;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #004182;
+    }
+
+    #status {
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        margin: 20px;
+      }
+
+      .profile-pic-section, .edit-form-section {
+        width: 100%;
+        padding: 20px;
+      }
+
+      .edit-form-section h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="profile-pic-section">
+      <img id="profile-pic" src="https://via.placeholder.com/150" alt="Profile Picture" />
+      <label class="upload-btn" for="pic-upload">Change Photo</label>
+      <input type="file" id="pic-upload" accept="image/*" />
+    </aside>
+
+    <main class="edit-form-section">
+      <h2>Edit Profile</h2>
+      <form id="edit-profile-form">
+        {% csrf_token %}
+        <label>Username</label>
+        <input type="text" name="username" id="username" required placeholder="e.g., yashasvee123"/>
+
+        <label>Role</label>
+        <input type="text" name="role" id="role" placeholder="e.g., Developer"/>
+
+        <label>About</label>
+        <textarea name="about" id="about" placeholder="About yourself..."></textarea>
+
+        <label>Bio</label>
+        <textarea name="bio" id="bio" required placeholder="Tell us about yourself..."></textarea>
+
+        <label>Skills</label>
+        <input type="text" name="skills" id="skills" placeholder="e.g., Python, Java, HTML"/>
+
+        <label>Education</label>
+        <input type="text" name="education" id="education" placeholder="e.g., B.Sc in Computer Science"/>
+
+        <label>Experience</label>
+        <input type="text" name="experience" id="experience" placeholder="e.g., Intern at XYZ Company"/>
+
+        <button type="submit">Save Changes</button>
+      </form>
+      <div id="status"></div>
+    </main>
+  </div>
+
+  <script>
+  // CSRF Token function
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Handle form submission
+    document.getElementById("edit-profile-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Get all form values
+      const username = document.getElementById('username').value;
+      const bio = document.getElementById('bio').value;
+      const skills = document.getElementById('skills').value;
+      const education = document.getElementById('education').value;
+      const experience = document.getElementById('experience').value;
+
+      // Get profile image if changed
+      const profilePic = document.getElementById("profile-pic");
+      let profileImage = null;
+      if (profilePic.src.startsWith('data:')) {
+        profileImage = profilePic.src;
+      }
+
+      // Create form data object
+      const formData = {
+        username: username,
+        bio: bio,
+        skills: skills,
+        education: education,
+        experience: experience,
+        profile_image: profileImage
+      };
+
+      // Send data to server
+      fetch("/api/saveProfile/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          if (data) {
+            // Show success message
+            document.getElementById("status").textContent = "Profile updated successfully!";
+            document.getElementById("status").style.color = "green";
+            
+            // Redirect to myprofile.html after 1 second
+            setTimeout(() => {
+              window.location.href = "{% url 'myprofile.html' %}";
+            }, 1000);
+          }
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          document.getElementById("status").textContent = "Error updating profile. Please try again.";
+          document.getElementById("status").style.color = "red";
+        });
+    });
+
+    // Handle image preview and conversion to base64
+    document.getElementById("pic-upload").addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById("profile-pic").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Load existing profile data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/api/getProfile/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        credentials: 'include'
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.profile) {
+          const profile = data.profile;
+          document.getElementById('username').value = profile.username || '';
+          document.getElementById('bio').value = profile.bio || '';
+          document.getElementById('skills').value = profile.skills || '';
+          document.getElementById('education').value = profile.education || '';
+          document.getElementById('experience').value = profile.experience || '';
+          if (profile.profile_image) {
+            document.getElementById('profile-pic').src = profile.profile_image;
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Error loading profile:', err);
+      });
+    });
+
+  </script>
+</body>
+</html>

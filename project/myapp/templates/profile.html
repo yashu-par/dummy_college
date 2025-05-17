@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Social Media Feed</title>
+  {% csrf_token %}
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .top-navbar .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .top-navbar .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-icons i {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      margin-left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      gap: 1rem;
+      padding: 1rem 2rem;
+    }
+
+    .left-sidebar {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      height: 500px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .left-sidebar img.cover {
+      width: 100%;
+      border-radius: 8px;
+      height: 80px;
+      object-fit: cover;
+    }
+
+    .left-sidebar img.avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-top: -30px;
+      border: 3px solid white;
+    }
+
+    .left-sidebar h3 {
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .left-sidebar p {
+      font-size: 0.9rem;
+      color: #0073b1;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu {
+      margin-top: 1rem;
+    }
+
+    .menu div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .network-section h2 {
+      margin-bottom: 10px;
+    }
+
+    .connection-requests,
+    .connections-grid {
+      background: #fff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    .request {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-info small {
+      display: block;
+      color: #666;
+      font-size: 0.8rem;
+      margin-top: 2px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .actions button {
+      margin-left: 8px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .accept {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .reject {
+      background: #dc2626;
+      color: white;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .user-card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .user-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .user-card .name {
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .user-card .status {
+      font-size: 0.7rem;
+      color: #666;
+    }
+
+    .actions button:hover {
+      opacity: 0.9;
+    }
+
+    .connect-btn {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 8px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .connect-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .connected-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: not-allowed;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .sent-btn {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .cancel {
+      background: #dc2626;
+      color: white;
+    }
+
+    .connection-requests {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .connection-requests h3 {
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 1.2rem;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #333;
+    }
+
+    tr:hover {
+      background: #f8f9fa;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-cell .avatar {
+      width: 40px;
+      height: 40px;
+    }
+
+    .action-cell {
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .left-sidebar {
+        display: none;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 8px 10px;
+      }
+
+      .user-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .action-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .action-cell button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-navbar">
+    <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">&nbsp;LinkUp</div>
+    <div class="nav-icons">
+      <a href="index.html"><div>🏠 Home</div></a>
+      <a href="profile.html"><div>👥 <sup>2</sup></div></a>
+      <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
+      <a href="/profile/"><div>👤 Me</div></a>
+      <a href="post.html"><button class="logout-btn">🎬</button></a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="left-sidebar">
+      <img src="https://i.pinimg.com/736x/cb/c2/08/cbc208059429ef521fb5d0f26d0b5473.jpg" class="cover" />
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvW3EiCFHxyDAMLeBoIrXn_gufSNsDT-BE_A&s" class="avatar" />
+      <h3 id="sidebar-username">Yashasvee</h3>
+      <p>LinkUp User<br>10+ connections</p>
+      <div class="menu">
+        <div>🏠 <a href="index.html">Home</a></div>
+        <div>👥 <a href="network.html">My Network</a></div>
+        <div>🔔 <a href="notification.html">Notifications</a></div>
+        <div style="margin-top: 10px;">✏️ <a href="{% url 'myprofile.html' %}" id="edit-profile-btn">Profile</a></div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <section class="network-section">
+        <h2>My Network</h2>
+    
+        <!-- Received Connection Requests -->
+        <div class="table-container">
+          <h3>Received Connection Requests</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Sent</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if received_requests %}
+                {% for req in received_requests %}
+                <tr id="request-{{ req.id }}">
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar" style="background-image: url('{% if req.from_user.userprofile.profile_image %}{{ req.from_user.userprofile.profile_image.url }}{% else %}blank-profile-picture-973460_640.png{% endif %}')"></div>
+                      <span>{{ req.from_user.username }}</span>
+                    </div>
+                  </td>
+                  <td>{{ req.from_user.userprofile.role|default:"LinkUp User" }}</td>
+                  <td>{{ req.timestamp|timesince }} ago</td>
+                  <td class="action-cell">
+                    <button type="button" class="accept" onclick="handleConnectionRequest('accept', {{ req.id }})">Accept</button>
+                    <button type="button" class="reject" onclick="handleConnectionRequest('reject', {{ req.id }})">Reject</button>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="4" style="text-align: center;">No pending connection requests</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+    
+        <!-- Sent Connection Requests -->
+        <div class="table-container">
+          <h3>Sent Connection Requests</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Sent</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if sent_requests %}
+                {% for req in sent_requests %}
+                <tr id="sent-request-{{ req.id }}">
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar" style="background-image: url('{% if req.to_user.userprofile.profile_image %}{{ req.to_user.userprofile.profile_image.url }}{% else %}blank-profile-picture-973460_640.png{% endif %}')"></div>
+                      <span>{{ req.to_user.username }}</span>
+                    </div>
+                  </td>
+                  <td>{{ req.to_user.userprofile.role|default:"LinkUp User" }}</td>
+                  <td>{{ req.timestamp|timesince }} ago</td>
+                  <td class="action-cell">
+                    <button type="button" class="cancel" onclick="cancelConnectionRequest({{ req.id }})">Cancel Request</button>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="4" style="text-align: center;">No sent connection requests</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+    
+        <!-- All Users -->
+        <div class="table-container">
+          <h3>All Users</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in all_users %}
+                {% if user.id not in connected_user_ids and user.id not in sent_request_user_ids %}
+                <tr id="user-{{ user.id }}">
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar" style="background-image: url('{% if user.userprofile.profile_image %}{{ user.userprofile.profile_image.url }}{% else %}blank-profile-picture-973460_640.png{% endif %}')"></div>
+                      <span>{{ user.username }}</span>
+                    </div>
+                  </td>
+                  <td>{{ user.userprofile.role|default:"LinkUp User" }}</td>
+                  <td class="action-cell">
+                    <button type="button" class="connect-btn" onclick="sendConnectionRequest({{ user.id }})">Connect</button>
+                  </td>
+                </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+    <script>
+  // CSRF token fetch karne ka function (Django ke docs se)
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Cookie starts with name?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  // Buttons ko select karo
+  const acceptButtons = document.querySelectorAll('button.accept');
+  const rejectButtons = document.querySelectorAll('button.reject');
+
+  // Function to send POST request
+  function sendPostRequest(url, data) {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify(data),
+      credentials: 'same-origin'  // CSRF ke liye zaruri hai
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.success){
+        alert('Action successful!');
+        // Yahan tum UI update kar sakti ho, jaise button disable kar dena
+      } else {
+        alert('Failed: ' + (data.error || 'Unknown error'));
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  // Accept button click event
+  acceptButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const requestId = button.getAttribute('data-request-id');
+      sendPostRequest('{% url "accept_connection_request" %}', {request_id: requestId});
+    });
+  });
+
+  // Reject button click event
+  rejectButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const requestId = button.getAttribute('data-request-id');
+      sendPostRequest('{% url "reject_connection_request" %}', {request_id: requestId});
+    });
+  });
+
+  function handleConnectionRequest(action, requestId) {
+    const url = action === 'accept' ? '{% url "accept_connection_request" %}' : '{% url "reject_connection_request" %}';
+    const formData = new FormData();
+    formData.append('request_id', requestId);
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status) {
+        // Remove the request from the UI
+        const requestElement = document.getElementById(`request-${requestId}`);
+        if (requestElement) {
+          const userId = requestElement.querySelector('.user-cell span').textContent;
+          requestElement.remove();
+          
+          // Update user card if it exists
+          const userCard = document.querySelector(`.user-card:has(.name:contains('${userId}'))`);
+          if (userCard) {
+            const connectBtn = userCard.querySelector('.connect-btn');
+            if (connectBtn) {
+              connectBtn.textContent = 'Connected';
+              connectBtn.disabled = true;
+              connectBtn.classList.remove('connect-btn');
+              connectBtn.classList.add('connected-btn');
+            }
+          }
+        }
+        
+        // Show success message
+        alert(action === 'accept' ? 'Connection request accepted!' : 'Connection request rejected!');
+        
+        // If no more requests, show "No pending requests" message
+        const requestsContainer = document.querySelector('.table-container:first-child table tbody');
+        const remainingRequests = requestsContainer.querySelectorAll('tr:not(:first-child)');
+        if (remainingRequests.length === 0) {
+          requestsContainer.innerHTML = '<tr><td colspan="4" style="text-align: center;">No pending connection requests</td></tr>';
+        }
+      } else {
+        alert(data.error || 'An error occurred');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while processing your request');
+    });
+  }
+
+  function sendConnectionRequest(userId) {
+    const formData = new FormData();
+    formData.append('to_user', userId);
+
+    fetch('{% url "send_connection_request" %}', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status) {
+        alert('Connection request sent!');
+        
+        // Remove user from all users table
+        const userRow = document.getElementById(`user-${userId}`);
+        if (userRow) {
+          userRow.remove();
+        }
+        
+        // Add to sent requests table
+        const sentRequestsTable = document.querySelector('.table-container:nth-child(2) table tbody');
+        const noRequestsMessage = sentRequestsTable.querySelector('tr td[colspan="4"]');
+        if (noRequestsMessage) {
+          sentRequestsTable.innerHTML = '';
+        }
+        
+        const newRow = document.createElement('tr');
+        newRow.id = `sent-request-${data.request_id}`;
+        newRow.innerHTML = `
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background-image: url('${userRow.querySelector('.avatar').style.backgroundImage}')"></div>
+              <span>${userRow.querySelector('.user-cell span').textContent}</span>
+            </div>
+          </td>
+          <td>${userRow.querySelector('td:nth-child(2)').textContent}</td>
+          <td>Just now</td>
+          <td class="action-cell">
+            <button type="button" class="cancel" onclick="cancelConnectionRequest(${data.request_id})">Cancel Request</button>
+          </td>
+        `;
+        sentRequestsTable.appendChild(newRow);
+      } else {
+        alert(data.error || 'An error occurred');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while sending the request');
+    });
+  }
+
+  function cancelConnectionRequest(requestId) {
+    const formData = new FormData();
+    formData.append('request_id', requestId);
+
+    fetch('{% url "cancel_connection_request" %}', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status) {
+        // Remove the request from the UI
+        const requestElement = document.getElementById(`sent-request-${requestId}`);
+        if (requestElement) {
+          const userId = requestElement.querySelector('.user-cell span').textContent;
+          requestElement.remove();
+          
+          // Add user back to the all users table
+          const allUsersTable = document.querySelector('.table-container:last-child table tbody');
+          const newRow = document.createElement('tr');
+          newRow.id = `user-${data.user_id}`;
+          newRow.innerHTML = `
+            <td>
+              <div class="user-cell">
+                <div class="avatar" style="background-image: url('${requestElement.querySelector('.avatar').style.backgroundImage}')"></div>
+                <span>${userId}</span>
+              </div>
+            </td>
+            <td>${requestElement.querySelector('td:nth-child(2)').textContent}</td>
+            <td class="action-cell">
+              <button type="button" class="connect-btn" onclick="sendConnectionRequest(${data.user_id})">Connect</button>
+            </td>
+          `;
+          allUsersTable.appendChild(newRow);
+        }
+        
+        // Show success message
+        alert('Connection request cancelled!');
+        
+        // If no more sent requests, show "No sent requests" message
+        const requestsContainer = document.querySelector('.table-container:nth-child(2) table tbody');
+        const remainingRequests = requestsContainer.querySelectorAll('tr:not(:first-child)');
+        if (remainingRequests.length === 0) {
+          requestsContainer.innerHTML = '<tr><td colspan="4" style="text-align: center;">No sent connection requests</td></tr>';
+        }
+      } else {
+        alert(data.error || 'An error occurred');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while cancelling the request');
+    });
+  }
+</script>
+
+
+</body>
+</html>

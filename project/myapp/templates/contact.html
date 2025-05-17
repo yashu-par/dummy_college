@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Page </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+    /* Navbar */
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .top-navbar .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .top-navbar .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-icons i {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      margin-left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      gap: 1rem;
+      padding: 1rem 2rem;
+    }
+        
+        
+
+        /* Contact Section */
+        .contact {
+            background: white;
+            color: black;
+            padding: 50px;
+            text-align: center;
+            margin:10px;
+        }
+        .contact h2{
+            margin-bottom: 20px;
+        }
+        .contact-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* Contact Form (Left Side) */
+        .contact-form {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 45%;
+            text-align: left;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .contact-form button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .contact-form button:hover {
+            background: #0056b3;
+        }
+
+        /* Contact Info (Right Side) */
+        .contact-info {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 45%;
+            text-align: left;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .contact-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .contact-form, .contact-info {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+  <div class="top-navbar">
+    <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">&nbsp;LinkUp</div>
+    <div class="nav-icons">
+    <a href="{% url 'index.html' %}"><div>🏠 Home</div></a>
+    <a href="profile.html"><div>👥 <sup>2</sup></div></a>
+    <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
+    <a href="post.html"><div>👤 Me</div></a>
+    <a href="{% url 'login.html' %}"><button class="logout-btn">↩ Logout</button></a>
+  </div>
+</div>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-container">
+            
+            <!-- Contact Form (Left Side) -->
+            <div class="contact-form">
+                <h3>Send us a message</h3>
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea rows="4" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </div>
+
+            <!-- Contact Info (Right Side) -->
+            <div class="contact-info">
+                <h3>Contact Information</h3>
+                <p><strong>📍 Address:</strong> 123, Your Street, Indore, India</p>
+                <p><strong>📧 Email:</strong> your.email@example.com</p>
+                <p><strong>📞 Phone:</strong> +91 98765 43210</p>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>

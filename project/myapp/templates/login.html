@@ -1,0 +1,147 @@
+ {% load static %}
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+  <!--<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">-->
+  <style>
+    /* Fallback styles in case external CSS doesn't load */
+    .login-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #fff;
+      margin-top: 200px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .login-container h1 {
+      text-align: center;
+      color: #262825;
+      margin-bottom: 20px;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 10px;
+      background: #5eb541;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .login-container button:hover {
+      background: #444;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .register-link a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    #responseMessage {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <p class="register-link">Don't have an account? <a href="{% url 'signup.html' %}">Register here</a></p>
+    <p id="responseMessage"></p>
+  </div>
+
+  <script>
+    // Get CSRF token from cookie
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const messageBox = document.getElementById("responseMessage");
+      messageBox.textContent = ''; // Clear previous messages
+
+      const username = document.querySelector('input[name="username"]').value;
+      const password = document.querySelector('input[name="password"]').value;
+
+      try {
+        const response = await fetch("{% url 'logindata' %}", {
+          method: "POST",
+          credentials: 'include',
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken')
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
+        });
+        
+        const result = await response.json();
+
+        if (response.ok) {
+          messageBox.style.color = "green";
+          messageBox.textContent = "Login successful!";
+          document.getElementById("loginForm").reset();
+          
+          // Redirect to profile page
+          window.location.href = "{% url 'profile.html' %}";
+        } else {
+          messageBox.style.color = "red";
+          messageBox.textContent = result.error || "Invalid credentials. Try again.";
+        }
+
+      } catch (error) {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Network error or server not responding.";
+        console.error("Error:", error);
+      }
+    });
+  </script>
+</body>
+</html>

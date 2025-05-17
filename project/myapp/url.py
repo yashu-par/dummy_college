@@ -1,0 +1,36 @@
+from django.urls import path
+# from rest_framework.routers import DefaultRouter
+from . import views
+
+urlpatterns = [
+    path("", views.indexpage, name="index.html"),
+    path('index.html', views.indexpage, name="index.html"),
+    path('login.html', views.loginpage, name="login.html"),
+    path('signup.html', views.signuppage, name="signup.html"),
+    path('contact.html', views.contactpage, name="contact.html"), 
+    path('Update.html', views.Updatepage, name="Update.html"),
+    path('Delete.html', views.Deletepage, name="Delete.html"),
+    path('profile.html', views.profilepage, name="profile.html"),
+    path('signup/', views.signupdata, name='signup'),
+    path('logindata/', views.logindata, name='logindata'),
+    path('post.html', views.post, name="post.html"),
+    path('api/posts/', views.get_posts, name='get_posts'),
+    path('myprofile.html', views.myprofile, name='myprofile.html'),
+    path('message.html', views.message, name='message.html'),
+    path('editprofile.html', views.editprofile, name='editprofile.html'),
+    path('api/saveProfile/', views.save_profile, name='save_profile'),
+    path('api/getProfile/', views.get_profile_data, name='get_profile_data'),
+    path('createpost.html', views.createpost, name='createpost.html'),
+    path('create-post/', views.create_post, name='create_post'),
+    path('api/createPost/', views.create_post, name='create_post'),
+     path('like-post/<int:post_id>/', views.like_post, name='like-post'),
+    path('add-comment/<int:post_id>/', views.add_comment, name='add-comment'),
+    path('api/share/', views.share_post, name='share-post'),
+    path('send-message/', views.send_message, name='send_message'),
+    path('get-messages/<int:user_id>/', views.get_messages, name='get_messages'),
+    path('send-request/', views.send_connection_request, name='send_connection_request'),
+    path('accept-request/', views.accept_connection_request, name='accept_connection_request'),
+    path('reject-request/', views.reject_connection_request, name='reject_connection_request'),
+    path('cancel-request/', views.cancel_connection_request, name='cancel_connection_request'),
+    path('network/', views.my_network, name='my_network'),
+]

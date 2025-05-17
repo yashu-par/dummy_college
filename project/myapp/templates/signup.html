@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    {% load static %}
+    <!-- REMOVE THIS IF signup.css DOESN'T EXIST -->
+    <!-- <link rel="stylesheet" href="{% static 'signup/signup.css' %}"> -->
+    <style>
+        /* Your CSS stays here (as is) */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background: #004c70; color: white;
+            padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .nav-links {
+            list-style: none; display: flex; gap: 20px;
+        }
+        .nav-links a {
+            color: white; text-decoration: none;
+        }
+        .signup-container {
+            display: flex; justify-content: center; align-items: center;
+            height: 90vh; background: #f0f2f5;
+        }
+        .signup-box {
+            background: white; padding: 30px; border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            width: 350px; text-align: center;
+        }
+        .signup-box input, .signup-box button {
+            width: 100%; padding: 10px; margin: 10px 0;
+        }
+        .signup-box button {
+            background: #007bff; color: white; border: none; border-radius: 5px;
+            cursor: pointer;
+        }
+        .signup-box button:hover {
+            background: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">
+            &nbsp;LinkUp
+        </div>
+        <ul class="nav-links">
+            <li><a href="{% url 'index.html' %}">Home</a></li>
+            <li><a href="{% url 'index.html' %}">About</a></li>
+            <li><a href="{% url 'signup.html' %}">Signup</a></li>
+            <li><a href="{% url 'login.html' %}">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="signup-container">
+        <div class="signup-box">
+            <h2>Signup</h2>
+            <h3>Make the most of your professional life</h3>
+            <form id="signup-form" method="POST">
+                {% csrf_token %}
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+                <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number (optional)">
+                <div id="error-message" class="error-message"></div>
+                <button type="submit">Create Account</button>
+            </form>
+            <p class="login-link">Already have an account? <a href="{% url 'login.html' %}">Login</a></p>
+        </div>
+    </section>
+
+    <script>
+        // Get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = ''; // Clear previous errors
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm_password = document.getElementById('confirm_password').value;
+            const mobile = document.getElementById('mobile').value;
+
+            if (password !== confirm_password) {
+                errorMessage.textContent = 'Passwords do not match!';
+                return;
+            }
+
+            try {
+                const response = await fetch('{% url "signup" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                        mobile: mobile || null
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    window.location.href = '{% url "login.html" %}';
+                } else {
+                    errorMessage.textContent = data.error || 'An error occurred during signup';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = 'An error occurred during signup. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html>

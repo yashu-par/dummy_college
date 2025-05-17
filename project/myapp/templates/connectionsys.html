@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connections Table View</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef1f5;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+   .container{
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .main-box {
+      background: white;
+      width: 95%;
+      max-width: 1000px;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .main-box h2 {
+      margin-bottom: 25px;
+      color: #333;
+      font-size: 24px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 15px 12px;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    thead {
+      background-color: #f5f5f5;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+   /* .status {
+      padding: 5px 10px;
+      border-radius: 12px;
+      color: white;
+      font-size: 13px;
+      display: inline-block;
+    }*/
+    .status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+}
+
+.connected {
+  background-color: #d4edda;
+  color: #28a745;
+}
+
+.pending {
+  background-color: #fff3cd;
+  color: #ff9800;
+}
+
+.requested {
+  background-color: #dbe9ff;
+  color: #007bff;
+}
+
+.active {
+  background-color: #ccf5e7;
+  color: #00b894;
+}
+
+.inactive {
+  background-color: #fddede;
+  color: #e74c3c;
+}
+
+.onsale {
+  background-color: #d0e8ff;
+  color: #1e90ff;
+}
+
+.bouncing {
+  background-color: #e7d9fb;
+  color: #8e44ad;
+}
+
+    .connected { background-color: rgb(156, 209, 156); }
+    .pending { background-color: rgb(240, 200, 126); }
+    .requested { background-color: rgb(124, 170, 215); }
+
+    .action-buttons button {
+      padding: 6px 12px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .accept-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .reject-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+   
+   
+
+  <div class="main-box">
+    <h2>Connection Requests</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Status</th>
+          <th>Requested On</th>
+          <th>Last Update</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Connected -->
+        <tr>
+          <td>Priya Sharma</td>
+          <td><span class="status connected">Connected</span></td>
+          <td>12 Apr 2025</td>
+          <td>13 Apr 2025</td>
+          <td>—</td>
+        </tr>
+
+        <!-- Pending -->
+        <tr>
+          <td>Ravi Mehta</td>
+          <td><span class="status pending">Pending</span></td>
+          <td>11 Apr 2025</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+
+        <!-- Requested -->
+        <tr>
+          <td>Anjali Verma</td>
+          <td><span class="status requested">Requested</span></td>
+          <td>13 Apr 2025</td>
+          <td>—</td>
+          <td>
+            <button class="accept-btn">Accept</button>
+            <button class="reject-btn">Reject</button>
+          </td>
+        </tr>
+
+        <!-- Connected -->
+        <tr>
+            <td>Aryan Singh</td>
+            <td><span class="status connected">Connected</span></td>
+            <td>10 Apr 2025</td>
+            <td>12 Apr 2025</td>
+            <td>—</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
