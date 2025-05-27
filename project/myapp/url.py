@@ -33,4 +33,5 @@ urlpatterns = [
     path('reject-request/', views.reject_connection_request, name='reject_connection_request'),
     path('cancel-request/', views.cancel_connection_request, name='cancel_connection_request'),
     path('network/', views.my_network, name='my_network'),
+    path('notification/', views.notification, name='notification'),
 ]

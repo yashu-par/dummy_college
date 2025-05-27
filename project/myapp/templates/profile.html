@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Social Media Feed</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   {% csrf_token %}
   <style>
     body {
@@ -347,10 +348,10 @@
     <div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCnLPN6IBETVCWY_I91e2TrK2x91NhkCvm3V85dvmN3c4WgQX2mhuGKuu2MgbNDytywAU&usqp=CAU" alt="LinkUp" style="height:30px;">&nbsp;LinkUp</div>
     <div class="nav-icons">
       <a href="index.html"><div>🏠 Home</div></a>
-      <a href="profile.html"><div>👥 <sup>2</sup></div></a>
-      <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
-      <a href="/profile/"><div>👤 Me</div></a>
-      <a href="post.html"><button class="logout-btn">🎬</button></a>
+      <a href="profile.html"><div>👥 profile </div></a>
+      
+      <a href="myprofile.html"><div><i class="fas fa-user"></i> Me</div></a>
+      <a href="post.html"><i class="fas fa-paper-plane"></i>post</a>
     </div>
   </div>
 
@@ -362,7 +363,7 @@
       <p>LinkUp User<br>10+ connections</p>
       <div class="menu">
         <div>🏠 <a href="index.html">Home</a></div>
-        <div>👥 <a href="network.html">My Network</a></div>
+        <div>👥 <a href="profile.html">My Network</a></div>
         <div>🔔 <a href="notification.html">Notifications</a></div>
         <div style="margin-top: 10px;">✏️ <a href="{% url 'myprofile.html' %}" id="edit-profile-btn">Profile</a></div>
       </div>

@@ -96,6 +96,7 @@
 
     .profile-name-title h2 {
       margin: 0;
+      margin-top: 30px;
       font-size: 24px;
     }
 
@@ -273,7 +274,6 @@
     <div class="nav-icons">
       <a href="index.html"><div>🏠 Home</div></a>
       <a href="profile.html"><div>👥 <sup>2</sup></div></a>
-      <a href="notification.html"><div>🔔 <sup>4</sup></div></a>
       <a href="message.html"><div> 💬</div></a>
       <a href="post.html"><button class="logout-btn">🎬</button></a>
     </div>
@@ -285,18 +285,18 @@
       <div class="banner-img"></div>
 
       <div class="profile-header">
-        <img id="profile-img" src="https://t4.ftcdn.net/jpg/08/35/71/47/360_F_835714791_ko7uXv4dEEqkr9WBdxICNeG8TCkKpuBf.jpg" alt="Profile" class="profile-img">
-      
+        <img id="profile-img" src="https://via.placeholder.com/150" alt="Profile Image" class="profile-img">
         <div class="profile-name-title">
-          <h2 id="profile-name">Loading...</h2>
-          <p id="profile-role">Loading...</p>
+          <h2 id="profile-name">Yashasvee Masani</h2>
+          <p id="profile-title">Software Engineer</p>
+          <p id="profile-role">user</p>
         </div>
       </div>
 
       <div class="profile-details">
         <h3 id="profile-username">Loading...</h3>
         <p id="profile-bio">Loading...</p>
-        <p class="location">New Delhi, Delhi, India • <a href="contact.html">Contact info</a></p>
+        <p class="location">Indore, India • <a href="contact.html">Contact info</a></p>
         <p><a href="#">Join Developer Community</a></p>
         <p>92,430 followers • 500+ connections</p>
         
@@ -342,7 +342,7 @@
         <h4>People You May Know</h4>
         <ul>
           <li>
-            <img src="blank-profile-picture-973460_640.png" alt="user" />
+            <img src="blank.jpg" alt="user" />
             <div>
               <p><strong>Neha K.</strong></p>
               <button>Connect</button>
@@ -427,7 +427,7 @@
             }
             
             // Update profile name and role
-            document.getElementById('profile-name').textContent = profile.username;
+            //document.getElementById('profile-name').textContent = profile.username;
             document.getElementById('profile-role').textContent = profile.role || 'User';
             document.getElementById('profile-username').textContent = profile.username;
             
@@ -447,16 +447,20 @@
 
             document.getElementById('about').value = profile.about || '';
             document.getElementById('role').value = profile.role || '';
+
+            if (profile.title) {
+              document.getElementById('profile-title').textContent = profile.title;
+            }
           } else {
             console.error('No profile data in response:', data);
           }
         })
-        .catch(err => {
-          console.error('Error loading profile:', err);
+       // .catch(err => {
+          //console.error('Error loading profile:', err);
           // Show error message to user
-          document.getElementById('profile-name').textContent = 'Error loading profile';
-          document.getElementById('profile-role').textContent = 'Please try again';
-        });
+         // document.getElementById('profile-name').textContent = 'Error loading profile';
+          //document.getElementById('profile-role').textContent = 'Please try again';
+        //});
     }
 
     // Function to handle logout

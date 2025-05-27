@@ -158,156 +158,211 @@
 
     <main class="edit-form-section">
       <h2>Edit Profile</h2>
-      <form id="edit-profile-form">
+      <form id="edit-profile-form" method="POST">
         {% csrf_token %}
-        <label>Username</label>
-        <input type="text" name="username" id="username" required placeholder="e.g., yashasvee123"/>
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" required placeholder="e.g., yashasvee123"/>
+        </div>
 
-        <label>Role</label>
-        <input type="text" name="role" id="role" placeholder="e.g., Developer"/>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <input type="text" name="role" id="role" placeholder="e.g., Developer"/>
+        </div>
 
-        <label>About</label>
-        <textarea name="about" id="about" placeholder="About yourself..."></textarea>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" name="title" id="title" placeholder="e.g., Software Engineer"/>
+        </div>
 
-        <label>Bio</label>
-        <textarea name="bio" id="bio" required placeholder="Tell us about yourself..."></textarea>
+        <div class="form-group">
+          <label for="about">About</label>
+          <textarea name="about" id="about" placeholder="Tell us about yourself..."></textarea>
+        </div>
 
-        <label>Skills</label>
-        <input type="text" name="skills" id="skills" placeholder="e.g., Python, Java, HTML"/>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea name="bio" id="bio" placeholder="Write a short bio..."></textarea>
+        </div>
 
-        <label>Education</label>
-        <input type="text" name="education" id="education" placeholder="e.g., B.Sc in Computer Science"/>
+        <div class="form-group">
+          <label for="skills">Skills</label>
+          <input type="text" name="skills" id="skills" placeholder="e.g., Python, JavaScript, Django"/>
+        </div>
 
-        <label>Experience</label>
-        <input type="text" name="experience" id="experience" placeholder="e.g., Intern at XYZ Company"/>
+        <div class="form-group">
+          <label for="education">Education</label>
+          <input type="text" name="education" id="education" placeholder="e.g., B.Tech in Computer Science"/>
+        </div>
 
-        <button type="submit">Save Changes</button>
+        <div class="form-group">
+          <label for="experience">Experience</label>
+          <input type="text" name="experience" id="experience" placeholder="e.g., 2 years of experience"/>
+        </div>
+
+        <button type="submit" id="save-button">Save Changes</button>
       </form>
       <div id="status"></div>
     </main>
   </div>
 
   <script>
-  // CSRF Token function
-  function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === name + "=") {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
+    // Debug function to check if script is loaded
+    console.log('Edit profile script loaded');
+
+    let profileImage = null;
+
+    // Function to get CSRF token from cookie
+    function getCSRFToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
-      }
-      return cookieValue;
+        return cookieValue;
     }
 
-    // Handle form submission
-    document.getElementById("edit-profile-form").addEventListener("submit", function (e) {
-      e.preventDefault();
+    // Function to handle profile image upload
+    document.getElementById('pic-upload').addEventListener('change', function(e) {
+        console.log('Image upload triggered');
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-pic').src = e.target.result;
+                profileImage = e.target.result;
+                console.log('Image loaded and converted to base64');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-      // Get all form values
-      const username = document.getElementById('username').value;
-      const bio = document.getElementById('bio').value;
-      const skills = document.getElementById('skills').value;
-      const education = document.getElementById('education').value;
-      const experience = document.getElementById('experience').value;
+    // Function to handle form submission
+    const form = document.getElementById('edit-profile-form');
+    console.log('Form element found:', form); // Debug if form is found
 
-      // Get profile image if changed
-      const profilePic = document.getElementById("profile-pic");
-      let profileImage = null;
-      if (profilePic.src.startsWith('data:')) {
-        profileImage = profilePic.src;
-      }
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            console.log('Form submit event triggered');
+            e.preventDefault();
+            
+            const csrfToken = getCSRFToken();
+            console.log('CSRF Token found:', csrfToken ? 'Yes' : 'No');
 
-      // Create form data object
-      const formData = {
-        username: username,
-        bio: bio,
-        skills: skills,
-        education: education,
-        experience: experience,
-        profile_image: profileImage
-      };
+            const formData = {
+                username: document.getElementById('username').value,
+                about: document.getElementById('about').value,
+                bio: document.getElementById('bio').value,
+                role: document.getElementById('role').value,
+                title: document.getElementById('title').value,
+                skills: document.getElementById('skills').value,
+                education: document.getElementById('education').value,
+                experience: document.getElementById('experience').value,
+                profile_image: profileImage
+            };
 
-      // Send data to server
-      fetch("/api/saveProfile/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
+            console.log('Form data prepared:', formData);
+
+            // Make the API call
+            fetch('/api/saveProfile/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formData),
+                credentials: 'same-origin'  // Changed from 'include' to 'same-origin'
+            })
+            .then(response => {
+                console.log('API Response received:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('API Response data:', data);
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                document.getElementById('status').textContent = 'Profile updated successfully!';
+                document.getElementById('status').style.color = 'green';
+                setTimeout(() => {
+                    window.location.href = '/myprofile.html';
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error during form submission:', error);
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+                document.getElementById('status').style.color = 'red';
+            });
+        });
+    } else {
+        console.error('Form element not found!');
+    }
+
+    // Function to load profile data
+    function loadProfileData() {
+        console.log('Loading profile data...');
+        const csrfToken = getCSRFToken();
+        
+        fetch('/api/getProfile/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: 'same-origin'  // Changed from 'include' to 'same-origin'
+        })
+        .then(response => {
+            console.log('Profile API Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
         })
         .then(data => {
-          if (data) {
-            // Show success message
-            document.getElementById("status").textContent = "Profile updated successfully!";
-            document.getElementById("status").style.color = "green";
-            
-            // Redirect to myprofile.html after 1 second
-            setTimeout(() => {
-              window.location.href = "{% url 'myprofile.html' %}";
-            }, 1000);
-          }
+            console.log('Profile data received:', data);
+            if (data && data.profile) {
+                const profile = data.profile;
+                
+                // Update form fields
+                document.getElementById('username').value = profile.username || '';
+                document.getElementById('about').value = profile.about || '';
+                document.getElementById('bio').value = profile.bio || '';
+                document.getElementById('role').value = profile.role || '';
+                document.getElementById('title').value = profile.title || '';
+                document.getElementById('skills').value = profile.skills || '';
+                document.getElementById('education').value = profile.education || '';
+                document.getElementById('experience').value = profile.experience || '';
+                
+                // Update profile image if exists
+                if (profile.profile_image) {
+                    document.getElementById('profile-pic').src = profile.profile_image;
+                }
+            }
         })
-        .catch(err => {
-          console.error("Error:", err);
-          document.getElementById("status").textContent = "Error updating profile. Please try again.";
-          document.getElementById("status").style.color = "red";
+        .catch(error => {
+            console.error('Error loading profile:', error);
+            document.getElementById('status').textContent = 'Error loading profile: ' + error.message;
+            document.getElementById('status').style.color = 'red';
         });
-    });
+    }
 
-    // Handle image preview and conversion to base64
-    document.getElementById("pic-upload").addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById("profile-pic").src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Load existing profile data when page loads
+    // Load profile data when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      fetch('/api/getProfile/', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
-        },
-        credentials: 'include'
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.profile) {
-          const profile = data.profile;
-          document.getElementById('username').value = profile.username || '';
-          document.getElementById('bio').value = profile.bio || '';
-          document.getElementById('skills').value = profile.skills || '';
-          document.getElementById('education').value = profile.education || '';
-          document.getElementById('experience').value = profile.experience || '';
-          if (profile.profile_image) {
-            document.getElementById('profile-pic').src = profile.profile_image;
-          }
-        }
-      })
-      .catch(err => {
-        console.error('Error loading profile:', err);
-      });
+        console.log('DOM Content Loaded');
+        loadProfileData();
     });
-
   </script>
 </body>
 </html>

@@ -51,10 +51,13 @@ class UserProfile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        # If user_registration is not set, try to find it
-        if not self.user_registration:
+        # Only try to set user_registration if it's not set and we're not creating a new profile
+        if not self.user_registration and self.pk is None:
             try:
-                self.user_registration = UserRegistration.objects.get(username=self.user.username)
+                user_reg = UserRegistration.objects.get(username=self.user.username)
+                # Check if another profile already has this user_registration
+                if not UserProfile.objects.filter(user_registration=user_reg).exists():
+                    self.user_registration = user_reg
             except UserRegistration.DoesNotExist:
                 pass
         super().save(*args, **kwargs)

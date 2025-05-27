@@ -139,6 +139,11 @@ def createpost(request):
    template = loader.get_template('createpost.html')
    return HttpResponse(template.render())
 
+
+def notification(request):
+   template = loader.get_template('notification.html')
+   return HttpResponse(template.render())
+
 @csrf_exempt
 def signupdata(request):
     if request.method == "POST":
@@ -272,26 +277,40 @@ def save_profile(request):
         data = json.loads(request.body)
         user = request.user
 
-        # Get the UserProfile object for this user
-        profile = UserProfile.objects.get(user=user)
+        # Always get or create the UserProfile
+        profile, created = UserProfile.objects.get_or_create(user=user)
 
-        # Only update username if it's different and not taken
+        # Username update logic
         new_username = data.get('username', user.username)
         if new_username != user.username:
             if User.objects.filter(username=new_username).exclude(id=user.id).exists():
                 return JsonResponse({'error': 'Username already taken'}, status=400)
             user.username = new_username
 
+        # Update all profile fields
+        profile.role = data.get('role', profile.role)
+        profile.title = data.get('title', profile.title)
         profile.bio = data.get('bio', '')
         profile.skills = data.get('skills', '')
         profile.education = data.get('education', '')
         profile.experience = data.get('experience', '')
+        profile.about = data.get('about', '')
 
-        # Handle profile image if provided
-        if data.get('profile_image'):
-            # Save profile image logic here
-            pass
+        # Handle profile image (base64 string)
+        profile_image_data = data.get('profile_image')
+        if profile_image_data and profile_image_data.startswith('data:'):
+            try:
+                format, imgstr = profile_image_data.split(';base64,')
+                ext = format.split('/')[-1]
+                profile.profile_image.save(
+                    f"{user.username}_profile.{ext}",
+                    ContentFile(base64.b64decode(imgstr)),
+                    save=False
+                )
+            except Exception as e:
+                print(f"Error saving profile image: {str(e)}")
 
+        # Save both user and profile
         user.save()
         profile.save()
 
@@ -303,6 +322,9 @@ def save_profile(request):
                 'skills': profile.skills,
                 'education': profile.education,
                 'experience': profile.experience,
+                'about': profile.about,
+                'role': profile.role,
+                'title': profile.title,
                 'profile_image': profile.profile_image.url if profile.profile_image else None
             }
         })
@@ -318,16 +340,24 @@ def get_profile_data(request):
             try:
                 profile = UserProfile.objects.get(user=request.user)
             except UserProfile.DoesNotExist:
-                # If profile doesn't exist, create one
-                user_reg = UserRegistration.objects.get(username=request.user.username)
+                # If profile doesn't exist, create one without user_registration first
                 profile = UserProfile.objects.create(
                     user=request.user,
-                    user_registration=user_reg,
                     bio='',
                     skills='',
                     education='',
                     experience=''
                 )
+                
+                # Then try to link user_registration if it exists
+                try:
+                    user_reg = UserRegistration.objects.get(username=request.user.username)
+                    # Only set user_registration if no other profile has it
+                    if not UserProfile.objects.filter(user_registration=user_reg).exists():
+                        profile.user_registration = user_reg
+                        profile.save()
+                except UserRegistration.DoesNotExist:
+                    pass
 
             # Get user registration data
             user_reg = profile.user_registration
@@ -342,7 +372,9 @@ def get_profile_data(request):
                 'experience': profile.experience or 'No experience listed',
                 'profile_image': profile.profile_image.url if profile.profile_image else None,
                 'mobile': user_reg.mobile if user_reg else '',
-                'role': user_reg.role if user_reg else 'user',
+                'role': profile.role or 'user',  # Use profile.role instead of user_reg.role
+                'title': profile.title or '',
+                'about': profile.about or '',
                 'is_verified': user_reg.is_verified if user_reg else False
             }
 
